@@ -1,0 +1,104 @@
+import { useEffect, useState } from "react";
+import { ask, health, resetProfile, sendFeedback, type AskOut, type Dials, type FeedbackOut } from "./api";
+import AgentCard from "./components/AgentCard";
+import PoolPanel from "./components/PoolPanel";
+
+const DEFAULTS: Dials[] = [
+  { id: "sprint", name: "Sprint", k: 0.9, lam: 0.15, beta: 0.85, rho: 0.0 },
+  { id: "coach", name: "Coach", k: 0.15, lam: 0.85, beta: 0.5, rho: 0.7 },
+];
+
+const STRIPE_LINK = (import.meta.env.VITE_STRIPE_LINK as string | undefined) ?? "#";
+
+export default function App() {
+  const [dials, setDials] = useState<Dials[]>(DEFAULTS);
+  const [prompt, setPrompt] = useState("Solve 3x + 7 = 22 for x");
+  const [out, setOut] = useState<AskOut | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<Record<string, FeedbackOut | null>>({});
+  const [status, setStatus] = useState<{ ok: boolean; mock_mode: boolean; model: string } | null>(null);
+
+  useEffect(() => { health().then(setStatus).catch(() => setStatus(null)); }, []);
+
+  async function run() {
+    setLoading(true); setError(null); setFeedback({});
+    try { setOut(await ask(prompt, dials)); }
+    catch (e) { setError((e as Error).message); }
+    finally { setLoading(false); }
+  }
+
+  async function judge(profileId: string, accepted: boolean) {
+    if (!out) return;
+    const r = out.results.find((x) => x.profile.id === profileId);
+    if (!r) return;
+    try { setFeedback((f) => ({ ...f, [profileId]: null })); const fb = await sendFeedback(out.prompt_id, profileId, r.chosen, accepted); setFeedback((f) => ({ ...f, [profileId]: fb })); }
+    catch (e) { setError((e as Error).message); }
+  }
+
+  async function reset(profileId: string) {
+    await resetProfile(profileId);
+    setFeedback((f) => ({ ...f, [profileId]: null }));
+  }
+
+  function addAgent() {
+    const n = dials.length + 1;
+    setDials([...dials, { id: `agent${n}`, name: `Agent ${n}`, k: 0.5, lam: 0.5, beta: 0.5, rho: 0.3 }]);
+  }
+
+  return (
+    <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+      <header className="space-y-2">
+        <h1 className="text-2xl font-semibold tracking-tight">Two agents, one prompt.</h1>
+        <p className="text-sm text-stone-600 max-w-2xl">
+          Both agents read the same drafts. They differ only in how they value them. <strong>They are deliberately different</strong>:
+          one is tuned for the problem set due tonight, the other for the exam next month. You set the dials, and each accept or reject
+          moves that agent's decision boundary.
+        </p>
+        <div className="text-xs text-stone-500">
+          {status === null && <span className="text-rose-600">Backend not reachable. Start it with <code>uvicorn app.main:app --reload</code> in <code>backend/</code>.</span>}
+          {status && (status.mock_mode ? "Mock mode: canned drafts, no API credits used." : `Drafts from ${status.model}.`)}
+        </div>
+      </header>
+
+      <form onSubmit={(e) => { e.preventDefault(); run(); }} className="flex gap-2">
+        <input
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          className="flex-1 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+          placeholder="Paste a homework prompt"
+        />
+        <button type="submit" disabled={loading || !prompt.trim()} className="rounded-lg bg-stone-900 text-white px-4 py-2 text-sm disabled:opacity-50">
+          {loading ? "Thinking…" : "Ask both"}
+        </button>
+      </form>
+      {error && <div className="text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-lg p-2">{error}</div>}
+
+      <div className={`grid gap-4 ${dials.length > 2 ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
+        {dials.map((d, i) => (
+          <AgentCard
+            key={d.id}
+            dials={d}
+            onDials={(nd) => setDials(dials.map((x, j) => (j === i ? nd : x)))}
+            result={out?.results.find((r) => r.profile.id === d.id) ?? null}
+            loading={loading}
+            feedback={feedback[d.id] ?? null}
+            onFeedback={(a) => judge(d.id, a)}
+            onReset={() => reset(d.id)}
+          />
+        ))}
+      </div>
+      {dials.length < 3 && (
+        <button onClick={addAgent} className="text-sm underline text-stone-500">+ add a third agent</button>
+      )}
+
+      {out && <PoolPanel pool={out.pool} source={out.source} />}
+
+      <footer className="rounded-xl border border-stone-200 bg-white p-4 text-sm text-stone-600 flex flex-wrap items-center gap-3">
+        <span className="font-medium text-stone-900">One flat price.</span>
+        <span>Cancel in one click. No steps behind a paywall. Free while this is a demo.</span>
+        <a href={STRIPE_LINK} className="ml-auto rounded-md border border-stone-300 px-3 py-1 hover:bg-stone-50">Support the build</a>
+      </footer>
+    </main>
+  );
+}

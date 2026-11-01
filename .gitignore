@@ -1,0 +1,15 @@
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.venv/
+# data
+backend/data/*.db
+# env
+.env
+# node
+node_modules/
+frontend/dist/
+# os
+.DS_Store
