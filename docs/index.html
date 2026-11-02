@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decision-Profile Agents</title>
+<meta name="description" content="A study tool where two AI agents answer the same homework prompt under different, student-set decision profiles. Every choice is auditable.">
+<style>
+  :root { --bg:#fafaf9; --fg:#1c1917; --muted:#57534e; --line:#e7e5e4; --accent:#047857; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1c1917; --fg:#fafaf9; --muted:#a8a29e; --line:#44403c; --accent:#34d399; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; }
+  main { max-width:680px; margin:0 auto; padding:56px 16px 80px; }
+  h1 { font-size:32px; line-height:1.15; margin:0 0 8px; letter-spacing:-0.01em; }
+  .sub { color:var(--muted); margin:0 0 36px; }
+  h2 { font-size:18px; margin:36px 0 10px; }
+  p { margin:0 0 14px; }
+  table { width:100%; border-collapse:collapse; font-size:15px; margin:10px 0 20px; }
+  th, td { text-align:left; padding:8px 6px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--muted); font-weight:500; }
+  code { font:13px ui-monospace,SFMono-Regular,Menlo,monospace; background:var(--line); padding:1px 5px; border-radius:4px; }
+  a { color:var(--accent); }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:12px 0 20px; }
+  .card { border:1px solid var(--line); border-radius:10px; padding:14px; }
+  .card b { display:block; margin-bottom:4px; }
+  .card span { color:var(--muted); font-size:14px; }
+  footer { margin-top:48px; color:var(--muted); font-size:14px; border-top:1px solid var(--line); padding-top:16px; }
+  @media (max-width:520px) { .cards { grid-template-columns:1fr; } h1 { font-size:26px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Two agents, one prompt.</h1>
+  <p class="sub">A study tool where two AI agents answer the same homework question under different decision profiles, and the student sets the dials.</p>
+
+  <p>Every AI study tool hides a tradeoff: answer now, or understand later. This one makes it the interface. A student types a prompt and gets two answers side by side from two agents that read the same drafts and value them differently.</p>
+
+  <div class="cards">
+    <div class="card"><b>Sprint</b><span>Final answer first. Short. No hedging. For the problem set due tonight.</span></div>
+    <div class="card"><b>Coach</b><span>Worked steps, a check for understanding, a clarifying question when the drafts disagree. For the exam next month.</span></div>
+  </div>
+
+  <h2>The dials</h2>
+  <p>Four parameters that computational neuroscience has shown to be real, measurable, and different from one person to the next.</p>
+  <table>
+    <tr><th>Parameter</th><th>What the student sees</th></tr>
+    <tr><td>Temporal discounting (k)</td><td>Learn it &harr; Answer now</td></tr>
+    <tr><td>Loss aversion (&lambda;)</td><td>Just tell me &harr; Flag uncertainty</td></tr>
+    <tr><td>Inverse temperature (&beta;)</td><td>Surprise me &harr; Consistent</td></tr>
+    <tr><td>Information bonus (&rho;)</td><td>Assume &harr; Ask first</td></tr>
+  </table>
+
+  <h2>How a choice is made</h2>
+  <p>Each draft is scored on a few deterministic features: where the final answer sits, how many steps, whether it checks itself, how much it hedges, how many of the other drafts agree with it. A profile is a linear decision boundary over those features. The chosen draft is the one with the largest margin, and the per-feature contributions are shown on every answer. Accept or reject moves the boundary with a hinge-loss update. Learning rates are fit from the student's own history, not set.</p>
+
+  <h2>What this answers</h2>
+  <table>
+    <tr><th>What students say they hate</th><th>What the design does</th></tr>
+    <tr><td>Confident wrong answers</td><td>An agreement count across drafts on every answer, instead of a confidence claim.</td></tr>
+    <tr><td>Free scan, locked steps, surprise charges</td><td>One flat price, cancel in one click, stated in the interface.</td></tr>
+    <tr><td>Answer machines that call themselves tutors</td><td>The teach-versus-answer tradeoff is labelled on each agent and set by the student.</td></tr>
+    <tr><td>Fake adaptivity</td><td>The profile drift is shown after each judgment, not asserted.</td></tr>
+  </table>
+
+  <h2>Status</h2>
+  <p>Working prototype. FastAPI backend, Postgres on Supabase, drafts from Claude Haiku via the Anthropic API, frontend in Lovable. Code is public: <a href="https://github.com/seze23/EdTechSprint">github.com/seze23/EdTechSprint</a>.</p>
+
+  <footer>Sydney Eze &middot; Barnard College, Columbia University &middot; <a href="mailto:pfpsydney39@gmail.com">pfpsydney39@gmail.com</a></footer>
+</main>
+</body>
+</html>
