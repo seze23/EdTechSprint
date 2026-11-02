@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS selections (
   margins TEXT NOT NULL,
   probs TEXT NOT NULL,
   ask_first INTEGER NOT NULL,
+  seed INTEGER NOT NULL DEFAULT 0,
   profile_snapshot TEXT NOT NULL,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
@@ -86,11 +87,11 @@ def log_drafts(prompt_id: int, drafts: list[str], finals: list[str], feats: list
         )
 
 
-def log_selection(prompt_id: int, profile: Profile, chosen: int, margins, probs, ask_first: bool) -> None:
+def log_selection(prompt_id: int, profile: Profile, chosen: int, margins, probs, ask_first: bool, seed: int) -> None:
     with conn() as c:
         c.execute(
-            "INSERT INTO selections(prompt_id, profile_id, chosen, margins, probs, ask_first, profile_snapshot) VALUES (?,?,?,?,?,?,?)",
-            (prompt_id, profile.id, chosen, json.dumps(margins), json.dumps(probs), int(ask_first), json.dumps(profile.to_dict())),
+            "INSERT INTO selections(prompt_id, profile_id, chosen, margins, probs, ask_first, seed, profile_snapshot) VALUES (?,?,?,?,?,?,?,?)",
+            (prompt_id, profile.id, chosen, json.dumps(margins), json.dumps(probs), int(ask_first), seed, json.dumps(profile.to_dict())),
         )
 
 

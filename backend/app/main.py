@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import random
+import zlib
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
@@ -82,12 +83,15 @@ def ask(body: AskIn):
     for pin in body.profiles:
         p = _apply_dials(db.load_profile(pin.id), pin)
         db.save_profile(p)
-        sel = select(p, pool, rng=random.Random(prompt_id * 1000 + hash(p.id) % 1000))
-        db.log_selection(prompt_id, p, sel.chosen, sel.margins, sel.probs, sel.ask_first)
+        # Stable seed: str.hash() is salted per process, crc32 is not. Logged so any pick can be replayed.
+        seed = prompt_id * 1000 + zlib.crc32(p.id.encode()) % 1000
+        sel = select(p, pool, rng=random.Random(seed))
+        db.log_selection(prompt_id, p, sel.chosen, sel.margins, sel.probs, sel.ask_first, seed)
         chosen = pool[sel.chosen]
         results.append({
             "profile": p.to_dict(),
             "chosen": sel.chosen,
+            "seed": seed,
             "answer": drafts[sel.chosen],
             "final_answer": chosen.final_answer,
             "agreement": {"share": chosen.values["agreement"], "n": len(pool)},

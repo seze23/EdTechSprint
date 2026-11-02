@@ -33,6 +33,7 @@ def test_ask_then_feedback_round_trip():
     sprint, coach = body["results"]
     assert sprint["chosen"] != coach["chosen"] or sprint["margins"] != coach["margins"]
     assert len(sprint["probs"]) == 4
+    assert sprint["seed"] == body["prompt_id"] * 1000 + __import__("zlib").crc32(b"sprint") % 1000
 
     fb = client.post("/feedback", json={"prompt_id": body["prompt_id"], "profile_id": "coach",
                                         "draft_idx": coach["chosen"], "accepted": False})
