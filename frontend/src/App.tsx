@@ -65,7 +65,7 @@ export default function App() {
         <input
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          className="flex-1 rounded-xl border border-blue-200 bg-white/90 px-4 py-2.5 text-sm shadow-card focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="flex-1 rounded-xl border border-blue-200 bg-white px-4 py-2.5 text-sm shadow-card focus:outline-none focus:ring-2 focus:ring-blue-400"
           placeholder="Paste a homework prompt"
         />
         <button type="submit" disabled={loading || !prompt.trim()} className="btn-primary px-5 py-2.5 text-sm">
