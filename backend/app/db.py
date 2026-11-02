@@ -128,7 +128,7 @@ def log_prompt(text: str, source: str) -> int:
 
 def log_drafts(prompt_id: int, drafts: list[str], finals: list[str], feats: list[list[float]]) -> None:
     with conn() as c:
-        c.executemany(
+        c.cursor().executemany(
             _q("INSERT INTO drafts(prompt_id, idx, text, final_answer, features) VALUES (?,?,?,?,?)"),
             [(prompt_id, i, d, f, json.dumps(v)) for i, (d, f, v) in enumerate(zip(drafts, finals, feats))],
         )
