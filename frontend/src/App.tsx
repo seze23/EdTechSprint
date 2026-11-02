@@ -49,14 +49,14 @@ export default function App() {
   return (
     <main className="max-w-6xl mx-auto px-4 py-10 space-y-6">
       <header className="space-y-2">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-r from-blue-800 via-blue-600 to-sky-500 bg-clip-text text-transparent">Two agents, one prompt.</h1>
-        <p className="text-sm text-slate-600 max-w-2xl">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white">Two agents, one prompt.</h1>
+        <p className="text-sm text-white/85 max-w-2xl">
           Both agents read the same drafts. They differ only in how they value them. <strong>They are deliberately different</strong>:
           one is tuned for the problem set due tonight, the other for the exam next month. You set the dials, and each accept or reject
           moves that agent's decision boundary.
         </p>
-        <div className="text-xs text-slate-500">
-          {status === null && <span className="text-rose-600 font-medium">Backend not reachable. Start it with <code>uvicorn app.main:app --reload</code> in <code>backend/</code>.</span>}
+        <div className="text-xs text-white/75">
+          {status === null && <span className="text-rose-200 font-medium">Backend not reachable. Start it with <code>uvicorn app.main:app --reload</code> in <code>backend/</code>.</span>}
           {status && `${status.mock_mode ? "Mock mode: canned drafts, no API credits used." : `Drafts from ${status.model}.`} Log store: ${status.db}.`}
         </div>
       </header>
@@ -68,8 +68,8 @@ export default function App() {
           className="flex-1 rounded-xl border border-blue-200 bg-white px-4 py-2.5 text-sm shadow-card focus:outline-none focus:ring-2 focus:ring-blue-400"
           placeholder="Paste a homework prompt"
         />
-        <button type="submit" disabled={loading || !prompt.trim()} className="btn-primary px-5 py-2.5 text-sm">
-          {loading ? "Thinking…" : "Ask both"}
+        <button type="submit" disabled={loading || !prompt.trim()} className="btn-inverse px-5 py-2.5 text-sm">
+          {loading ? "Thinking…" : dials.length > 2 ? "Ask all" : "Ask both"}
         </button>
       </form>
       {error && <div className="text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-xl p-3">{error}</div>}
@@ -89,7 +89,7 @@ export default function App() {
         ))}
       </div>
       {dials.length < 3 && (
-        <button onClick={addAgent} className="text-sm text-blue-700 font-medium hover:underline">+ add a third agent</button>
+        <button onClick={addAgent} className="text-sm text-white/90 font-medium hover:underline">+ add a third agent</button>
       )}
 
       {out && <PoolPanel pool={out.pool} source={out.source} />}
