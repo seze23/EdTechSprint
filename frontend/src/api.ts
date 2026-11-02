@@ -54,4 +54,4 @@ export const ask = (prompt: string, profiles: Dials[]) => post<AskOut>("/ask", {
 export const sendFeedback = (prompt_id: number, profile_id: string, draft_idx: number, accepted: boolean) =>
   post<FeedbackOut>("/feedback", { prompt_id, profile_id, draft_idx, accepted });
 export const resetProfile = (id: string) => post<{ profile: ProfileOut }>(`/profile/${id}/reset`, {});
-export const health = () => fetch(`${API_URL}/health`).then((r) => r.json() as Promise<{ ok: boolean; mock_mode: boolean; model: string }>);
+export const health = () => fetch(`${API_URL}/health`).then((r) => r.json() as Promise<{ ok: boolean; mock_mode: boolean; model: string; db: string }>);

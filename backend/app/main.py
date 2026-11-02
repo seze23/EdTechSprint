@@ -58,7 +58,7 @@ def _apply_dials(p: Profile, pin: ProfileIn) -> Profile:
 
 @app.get("/health")
 def health():
-    return {"ok": True, "mock_mode": config.MOCK_MODE, "model": config.DRAFT_MODEL, "n_drafts": config.N_DRAFTS}
+    return {"ok": True, "mock_mode": config.MOCK_MODE, "model": config.DRAFT_MODEL, "n_drafts": config.N_DRAFTS, "db": db.backend_name()}
 
 
 @app.get("/meta")

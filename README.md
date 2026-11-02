@@ -34,6 +34,19 @@ Set `ANTHROPIC_API_KEY` in `.env` to draw real drafts. The default model is
 `claude-haiku-5-5`; it rejects non-default sampling parameters, so draft
 diversity comes from per-draft style instructions rather than temperature.
 
+## Supabase
+
+The log store is SQLite until `DATABASE_URL` is set. For Supabase: in the project
+dashboard click **Connect**, choose **Transaction pooler** (port 6543), copy the URI,
+replace `[YOUR-PASSWORD]` with the database password, and put it in `.env`:
+
+```
+DATABASE_URL=postgresql://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres?sslmode=require
+```
+
+Tables are created on first start. `backend/supabase/schema.sql` is the same schema
+for reference. Run the test suite against it with `TEST_DATABASE_URL=... pytest -q`.
+
 ## Lovable
 
 Start a new Lovable project, paste `docs/LOVABLE_PROMPT.md`, and connect this

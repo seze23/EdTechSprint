@@ -17,7 +17,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<Record<string, FeedbackOut | null>>({});
-  const [status, setStatus] = useState<{ ok: boolean; mock_mode: boolean; model: string } | null>(null);
+  const [status, setStatus] = useState<{ ok: boolean; mock_mode: boolean; model: string; db: string } | null>(null);
 
   useEffect(() => { health().then(setStatus).catch(() => setStatus(null)); }, []);
 
@@ -57,7 +57,7 @@ export default function App() {
         </p>
         <div className="text-xs text-stone-500">
           {status === null && <span className="text-rose-600">Backend not reachable. Start it with <code>uvicorn app.main:app --reload</code> in <code>backend/</code>.</span>}
-          {status && (status.mock_mode ? "Mock mode: canned drafts, no API credits used." : `Drafts from ${status.model}.`)}
+          {status && `${status.mock_mode ? "Mock mode: canned drafts, no API credits used." : `Drafts from ${status.model}.`} Log store: ${status.db}.`}
         </div>
       </header>
 
