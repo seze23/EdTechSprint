@@ -47,9 +47,10 @@ def same_answer(a: str, b: str) -> bool:
     ta, tb = content_tokens(a), content_tokens(b)
     if not ta or not tb:
         return False
+    containment = len(ta & tb) / min(len(ta), len(tb))
     if min(len(ta), len(tb)) <= 2:
-        return ta == tb
-    return len(ta & tb) / min(len(ta), len(tb)) >= CONTAINMENT_THRESHOLD
+        return containment == 1.0          # short answers: the smaller must sit inside the larger
+    return containment >= CONTAINMENT_THRESHOLD
 
 
 def agreement_shares(finals: list[str]) -> list[float]:

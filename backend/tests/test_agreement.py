@@ -26,5 +26,7 @@ def test_boundaries():
     assert same_answer("", "5") is False                     # empty never agrees
     assert same_answer("5", "five apples") is False          # numeric vs prose
     assert same_answer("paris", "paris") is True
-    assert same_answer("paris", "london") is False           # short answers need exact token match
+    assert same_answer("paris", "london") is False           # short answers: smaller set must be a subset
+    assert same_answer("yes, 0.999... equals 1", "yes, 0.999... is exactly equal to 1") is True
+    assert same_answer("yes", "no") is False
     assert agreement_shares(["", ""]) == [0.0, 0.0]
