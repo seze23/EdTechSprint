@@ -11,8 +11,17 @@ environment to its URL.
 ---
 
 Build a single-page study tool called "Two agents, one prompt". Stack: Vite, React,
-TypeScript, Tailwind, shadcn/ui. Calm, neutral palette (stone greys, one emerald and
-one rose accent for accept/reject). No marketing hero, no gradients.
+TypeScript, Tailwind, shadcn/ui.
+
+**Look.** Blue. Page background is a soft gradient: pale sky at the top fading to white,
+with one faint sky-blue radial glow top-left and a faint indigo glow top-right. Cards are
+white at 85% opacity with a light blue border, large radius (16px), a soft blue-tinted
+shadow, and a thin gradient bar (blue → sky → indigo) across the top edge. Primary
+buttons are a blue → sky gradient with white text. Reject is an outlined button with
+rose text. The h1 is gradient text (deep blue → sky). Typeface is "Instrument Sans" from
+Google Fonts for everything, "JetBrains Mono" for parameter values and numbers. Sharp
+and clean, not rounded or playful. No stock illustrations, no emoji, no purple-on-black
+"AI" look, no Inter.
 
 **Layout, top to bottom**
 
@@ -69,3 +78,22 @@ returns
 `GET /profile/{id}`, `POST /profile/{id}/reset`, `GET /health`, `GET /meta`.
 
 Keep all copy flat and literal. No exclamation marks. No "AI-powered".
+
+
+---
+
+# Restyle prompt (if the project already exists in Lovable)
+
+Restyle the whole app, no functional changes. Palette is blue. Page background: soft
+vertical gradient from pale sky (#eff6ff) to white, plus one faint sky radial glow at the
+top-left and one faint indigo glow at the top-right. Cards: white at 85% opacity, 1px
+light-blue border (#dbeafe), 16px radius, soft blue-tinted shadow, and a 4px gradient bar
+(blue-600 → sky-400 → indigo-400) along the top edge. Primary buttons: gradient from
+blue-600 to sky-500, white text, 12px radius. Reject button: white with rose-200 border
+and rose-600 text. Agreement pill: solid blue-600 with white text. Weight bars: blue
+gradient for positive, rose for negative, on a blue-50 track. The h1 "Two agents, one
+prompt." is gradient text from blue-800 through blue-600 to sky-500. Load "Instrument
+Sans" (400/500/600/700) and "JetBrains Mono" (400/500) from Google Fonts; use Instrument
+Sans everywhere and JetBrains Mono for parameter values, margins and feature chips. Text
+is slate-900 with slate-500 for secondary. Remove every grey/stone tone. Keep layout,
+components and copy exactly as they are.

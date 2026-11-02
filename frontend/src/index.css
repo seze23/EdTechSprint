@@ -2,4 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-input[type="range"] { accent-color: #1c1917; }
+html, body, #root { min-height: 100%; }
+body {
+  background:
+    radial-gradient(1100px 520px at 10% -10%, rgba(56,189,248,0.28), transparent 60%),
+    radial-gradient(900px 480px at 100% 0%, rgba(99,102,241,0.18), transparent 60%),
+    linear-gradient(180deg, #eff6ff 0%, #f8fbff 45%, #ffffff 100%);
+  background-attachment: fixed;
+}
+
+input[type="range"] { accent-color: #2563eb; height: 1.25rem; }
+
+.card { @apply rounded-2xl border border-blue-100 bg-white/85 backdrop-blur shadow-card; }
+.btn-primary { @apply rounded-xl bg-gradient-to-r from-blue-600 to-sky-500 text-white font-medium shadow-pop hover:from-blue-700 hover:to-sky-600 disabled:opacity-50 disabled:shadow-none transition; }
+.btn-ghost { @apply rounded-xl border border-blue-200 bg-white text-blue-700 font-medium hover:bg-blue-50 transition; }
+.pill { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium; }

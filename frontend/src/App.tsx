@@ -47,16 +47,16 @@ export default function App() {
   }
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+    <main className="max-w-6xl mx-auto px-4 py-10 space-y-6">
       <header className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Two agents, one prompt.</h1>
-        <p className="text-sm text-stone-600 max-w-2xl">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-r from-blue-800 via-blue-600 to-sky-500 bg-clip-text text-transparent">Two agents, one prompt.</h1>
+        <p className="text-sm text-slate-600 max-w-2xl">
           Both agents read the same drafts. They differ only in how they value them. <strong>They are deliberately different</strong>:
           one is tuned for the problem set due tonight, the other for the exam next month. You set the dials, and each accept or reject
           moves that agent's decision boundary.
         </p>
-        <div className="text-xs text-stone-500">
-          {status === null && <span className="text-rose-600">Backend not reachable. Start it with <code>uvicorn app.main:app --reload</code> in <code>backend/</code>.</span>}
+        <div className="text-xs text-slate-500">
+          {status === null && <span className="text-rose-600 font-medium">Backend not reachable. Start it with <code>uvicorn app.main:app --reload</code> in <code>backend/</code>.</span>}
           {status && `${status.mock_mode ? "Mock mode: canned drafts, no API credits used." : `Drafts from ${status.model}.`} Log store: ${status.db}.`}
         </div>
       </header>
@@ -65,14 +65,14 @@ export default function App() {
         <input
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          className="flex-1 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"
+          className="flex-1 rounded-xl border border-blue-200 bg-white/90 px-4 py-2.5 text-sm shadow-card focus:outline-none focus:ring-2 focus:ring-blue-400"
           placeholder="Paste a homework prompt"
         />
-        <button type="submit" disabled={loading || !prompt.trim()} className="rounded-lg bg-stone-900 text-white px-4 py-2 text-sm disabled:opacity-50">
+        <button type="submit" disabled={loading || !prompt.trim()} className="btn-primary px-5 py-2.5 text-sm">
           {loading ? "Thinking…" : "Ask both"}
         </button>
       </form>
-      {error && <div className="text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-lg p-2">{error}</div>}
+      {error && <div className="text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-xl p-3">{error}</div>}
 
       <div className={`grid gap-4 ${dials.length > 2 ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
         {dials.map((d, i) => (
@@ -89,15 +89,15 @@ export default function App() {
         ))}
       </div>
       {dials.length < 3 && (
-        <button onClick={addAgent} className="text-sm underline text-stone-500">+ add a third agent</button>
+        <button onClick={addAgent} className="text-sm text-blue-700 font-medium hover:underline">+ add a third agent</button>
       )}
 
       {out && <PoolPanel pool={out.pool} source={out.source} />}
 
-      <footer className="rounded-xl border border-stone-200 bg-white p-4 text-sm text-stone-600 flex flex-wrap items-center gap-3">
-        <span className="font-medium text-stone-900">One flat price.</span>
+      <footer className="card p-4 text-sm text-slate-600 flex flex-wrap items-center gap-3">
+        <span className="font-semibold text-slate-900">One flat price.</span>
         <span>Cancel in one click. No steps behind a paywall. Free while this is a demo.</span>
-        <a href={STRIPE_LINK} className="ml-auto rounded-md border border-stone-300 px-3 py-1 hover:bg-stone-50">Support the build</a>
+        <a href={STRIPE_LINK} className="btn-ghost ml-auto px-3 py-1.5 text-sm">Support the build</a>
       </footer>
     </main>
   );

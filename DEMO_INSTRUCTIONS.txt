@@ -1,0 +1,51 @@
+DEMO INSTRUCTIONS  (Decision-Profile Agents)
+============================================
+
+WHAT IS WHERE
+- Code:        ~/Downloads/EdTechSprint        github.com/seze23/EdTechSprint
+- Landing:     https://seze23.github.io/EdTechSprint/   (served from docs/index.html)
+- Backend:     FastAPI in backend/.  Drafts from claude-haiku-5-5.  Log store = Supabase Postgres.
+- Frontend:    Lovable project (connected to its own GitHub repo).  frontend/ here is the reference copy.
+- Secrets:     .env at repo root (gitignored).  ANTHROPIC_API_KEY and DATABASE_URL live there.
+
+RUN THE BACKEND + PUBLIC URL (demo week, no hosting)
+1. Open Terminal.
+2.   cd ~/Downloads/EdTechSprint
+     ./scripts/tunnel.sh
+3. Wait for the line:   Public:  https://<four-words>.trycloudflare.com
+4. Keep this terminal open for the whole demo.  Ctrl-C stops everything.
+
+POINT LOVABLE AT IT
+1. In Lovable: Project settings -> environment / secrets.
+2. Set   VITE_API_URL   to the Public URL from step 3.  No trailing slash.
+3. Republish.
+4. The status line at the top of the app should read:
+      "Drafts from claude-haiku-5-5. Log store: postgres."
+   If it says "Backend not reachable", the tunnel is down or the URL is stale.
+
+THINGS THAT BITE
+- The tunnel URL changes every time the script restarts.  Re-paste it into Lovable after a restart.
+- Laptop must stay awake and online.  System Settings -> Energy / Battery -> prevent sleep for the day.
+- First request after idle can take ~5 s (four Haiku calls).  Warm it up before you present.
+- Mock mode (canned drafts, no credits) happens automatically if ANTHROPIC_API_KEY is empty.
+
+GOOD DEMO PROMPTS
+- "Solve 3x + 7 = 22 for x"            numeric, pool agrees, sympy check passes, Sprint vs Coach diverge
+- "Why does ice float?"                 prose, pool agrees after fuzzy matching
+- Something genuinely ambiguous         makes Coach ask a clarifying question first (rho dial)
+- Accept / reject 5 times on one agent  triggers the eta re-fit and shows profile drift
+
+LOCAL DEV (no tunnel)
+  Terminal 1:  conda activate edtech && cd ~/Downloads/EdTechSprint/backend && uvicorn app.main:app --reload
+  Terminal 2:  cd ~/Downloads/EdTechSprint/frontend && npm run dev        -> http://localhost:5173
+  Tests:       cd backend && pytest -q
+
+CREDITS
+- Anthropic $500: in use.  Expires ~Feb 28 2027.  Key was pasted in chat once -> rotate it in the Console before anything public.
+- Supabase $300/12mo: in use.  Project ref wgdihziaufbyhnbpvxdv (us-east-2).  Password can be rotated under Settings -> Database.
+- AWS $5k: application pending.  When credits land, deploy backend to App Runner and retire the tunnel.
+
+ROTATING THE ANTHROPIC KEY
+1. platform.claude.com -> your workspace -> API keys -> Create key.
+2. Paste the new key into .env as ANTHROPIC_API_KEY=...
+3. Delete the old key in the Console.  Restart the backend.
