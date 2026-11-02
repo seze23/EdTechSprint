@@ -4,6 +4,14 @@ The spec's selector was a softmax over a linear utility. Keeping the softmax, th
 cleanest interpretable version of that utility is an SVM decision function. This
 note says exactly what was stitched together and what each dial does to it.
 
+## Agreement is a cluster share, not a string match
+
+Numeric final answers agree when they are numerically equal. Prose answers agree
+when their content tokens (lower-cased, stop words and parentheticals removed,
+lightly stemmed) overlap with containment ≥ 0.6. Drafts are clustered by
+union-find and each draft's `agreement` is its cluster's share of the pool. No
+model call, so the number is reproducible from the logged text.
+
 ## One hyperplane per agent
 
 Every draft `i` gets a deterministic feature vector `f_i` in roughly `[0,1]^9`

@@ -7,8 +7,9 @@ the only thing the selector sees, which is what makes a choice auditable.
 from __future__ import annotations
 
 import re
-from collections import Counter
 from dataclasses import dataclass
+
+from .agreement import agreement_shares
 
 FEATURE_NAMES = [
     "answer_first",     # final answer appears in the first 20% of the text
@@ -18,7 +19,7 @@ FEATURE_NAMES = [
     "understanding",    # draft asks the student to try something / checks understanding
     "hedges",           # hedge-word count, clipped at 5, /5
     "questions",        # questions directed at the student, clipped at 3, /3
-    "agreement",        # fraction of the pool sharing this draft's final answer
+    "agreement",        # fraction of the pool whose final answer matches this draft's (numeric or fuzzy prose)
     "math_ok",          # sympy check: 1 match, 0 mismatch, 0.5 unknown
 ]
 # Which features "pay off now" vs "pay off later" (the discount axis).
@@ -86,8 +87,7 @@ def _answer_position(text: str, final: str) -> float:
 def extract_pool(drafts: list[str], math_scores: list[float] | None = None) -> list[Features]:
     """Extract features for a whole pool so that `agreement` can be computed."""
     finals = [extract_final_answer(d) for d in drafts]
-    counts = Counter(f for f in finals if f)
-    n = len(drafts)
+    shares = agreement_shares(finals)
     out: list[Features] = []
     for i, (text, final) in enumerate(zip(drafts, finals)):
         words = len(text.split())
@@ -100,7 +100,7 @@ def extract_pool(drafts: list[str], math_scores: list[float] | None = None) -> l
             "understanding": 1.0 if _count_terms(text, _UNDERSTANDING) > 0 else 0.0,
             "hedges": min(_count_terms(text, _HEDGES), 5) / 5.0,
             "questions": min(n_q, 3) / 3.0,
-            "agreement": (counts[final] / n) if final else 0.0,
+            "agreement": shares[i],
             "math_ok": (math_scores[i] if math_scores else 0.5),
         }
         out.append(Features(values=values, final_answer=final))
