@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Barlow Semi Condensed"', "ui-sans-serif", "system-ui", "-apple-system", "Helvetica", "Arial", "sans-serif"],
+        sans: ['"Sofia Sans Semi Condensed"', "ui-sans-serif", "system-ui", "-apple-system", "Helvetica", "Arial", "sans-serif"],
         mono: ['"JetBrains Mono"', "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
       },
       boxShadow: {
