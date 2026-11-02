@@ -47,6 +47,16 @@ DATABASE_URL=postgresql://postgres.<ref>:<password>@aws-0-<region>.pooler.supaba
 Tables are created on first start. `backend/supabase/schema.sql` is the same schema
 for reference. Run the test suite against it with `TEST_DATABASE_URL=... pytest -q`.
 
+## Public URL without hosting (demo week)
+
+```bash
+./scripts/tunnel.sh
+```
+
+Starts the backend and a Cloudflare quick tunnel, then prints an https URL. Paste it
+into Lovable as `VITE_API_URL`. The URL changes each run, so re-set it after a restart.
+Keep the terminal open during the demo.
+
 ## Lovable
 
 Start a new Lovable project, paste `docs/LOVABLE_PROMPT.md`, and connect this
